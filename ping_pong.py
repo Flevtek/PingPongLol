@@ -2,9 +2,9 @@ from pygame import *
 
 win_width = 700
 win_height = 500
-display.set_caption("Shooter")
+display.set_caption("Ping Pong")
 window = display.set_mode((win_width, win_height))
-background = transform.scale(image.load(img_back), (win_width, win_height))
+background = transform.scale(image.load(img_back), (win_width, win_height)
 
 class GameSprite(sprite.Sprite):
     def __init__(self, player_image, player_x, player_y, player_speed, wight, height):
