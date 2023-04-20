@@ -24,7 +24,17 @@ class Player(GameSprite):
             self.rect.y -= self.speed
         if keys[K_s] and self.rect.y < win_height - 80:
             self.rect.y += self.speed
-
+class Pause(GameSprite):
+    def __init__(self, player_image, player_x, player_y, player_speed, wight, height):
+        super().__init__(player_image, player_x, player_y, player_speed, wight, height)
+        self.showing = False
+    def hide(self):
+        self.showing = False
+    def show(self):
+        self.showing = True
+    def reset(self):
+        if self.showing:
+            window.blit(self.image, (self.rect.x, self.rect.y))
 
 #игровая сцена:
 back = (200, 255, 255)
@@ -43,11 +53,16 @@ FPS = 60
 racket1 = Player('platformL.png', 30, 200, 4, 50, 150) 
 racket2 = Player('platformR.png', 520, 200, 4, 50, 150)
 ball = GameSprite('ball.png', 200, 200, 4, 50, 50)
+pause = Pause("pause.png",225,175,0,150,150)
+
+
 
 font.init()
 font = font.Font(None, 35)
 lose1 = font.render('PLAYER 1 LOSE!', True, (180, 0, 0))
 lose2 = font.render('PLAYER 2 LOSE!', True, (180, 0, 0))
+pauseAct = font.render('PAUSE', True, (128,128,128))
+pauseHint = font.render('PRESS SPACE TO REWIND', True, (139, 0, 255))
 
 
 speed_x = 3
@@ -57,7 +72,17 @@ while game:
     for e in event.get():
         if e.type == QUIT:
             game = False
-    
+        elif e.type == KEYDOWN:
+            if e.key == K_SPACE:
+                if finish:
+                    finish = False
+                    pause.hide()
+                else:
+                    finish = True
+                    pause.show()
+                    window.blit(pauseAct,(260,340))
+                    window.blit(pauseHint,(150,370))
+
     if finish != True:
         window.fill(back)
         racket1.update_l()
@@ -94,7 +119,7 @@ while game:
         racket1.reset()
         racket2.reset()
         ball.reset()
-
+    pause.reset()
 
     display.update()
     clock.tick(FPS)
